@@ -5,6 +5,24 @@ window.PersistentStateRegistry = (() => {
     constructor () {
       if (instance) return instance;
       this.supportedTags = ["input", "textarea"];
+      this.supportedInputTypes = [
+        "checkbox",
+        "color",
+        "date",
+        "datetime-local",
+        "email",
+        "month",
+        "number",
+        "password",
+        "radio",
+        "range",
+        "search",
+        "tel",
+        "text",
+        "time",
+        "url",
+        "week"
+      ];
       instance = this;
     }
 
@@ -44,7 +62,15 @@ window.PersistentStateRegistry = (() => {
 
     static supported(elem) {
       if (!instance) new PersistentStateRegistry();
-      return (instance.supportedTags.includes(elem.tagName.toLowerCase()))
+      let tagName = elem.tagName.toLowerCase();
+      let tagSupported = (instance.supportedTags.includes(tagName));
+      if (tagSupported) {
+        if (tagName === 'input') {
+          return instance.supportedInputTypes.includes(elem.type);
+        }
+        return true;
+      }
+      return false;
     }
   }
 
@@ -66,12 +92,30 @@ class PersistentState extends HTMLElement {
 
   init (elem, idx) {
     if (!PersistentStateRegistry.supported(elem)) return;
-    let key = elem.tagName + "#" + (elem.id || idx); 
     let id = this.id || "GLOBAL";
-    elem.value = this.storage.get(key, this.type, id, "")
-    elem.addEventListener('input', (e) => {
-      this.storage.set(key, e.currentTarget.value, this.type, id)
-    });
+    
+    if ('radio' === elem.type) {
+      let key = elem.tagName + "[name=" + elem.name + "]"; 
+      let checkedItem = this.storage.get(key, this.type, id, null);
+      if (checkedItem && checkedItem === elem.value) { 
+        elem.checked = true;
+      }
+      elem.addEventListener('change', (e) => {
+        this.storage.set(key, e.currentTarget.value, this.type, id)
+      });
+    } else if ('checkbox' === elem.type) {
+      let key = elem.tagName + "#" + (elem.id || idx);
+      elem.checked = (this.storage.get(key, this.type, id, false) === 'true');
+      elem.addEventListener('change', (e) => {
+        this.storage.set(key, e.currentTarget.checked, this.type, id)
+      });
+    } else {
+      let key = elem.tagName + "#" + (elem.id || idx); 
+      elem.value = this.storage.get(key, this.type, id, "")
+      elem.addEventListener('input', (e) => {
+        this.storage.set(key, e.currentTarget.value, this.type, id)
+      });
+    }
   }
 }
 
