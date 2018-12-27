@@ -1,0 +1,7 @@
+{
+  "bowerFiles": [
+    "components/persistent-state/persistent-state.js",
+    "components/persistent-state/persistent-state.html"
+  ],
+  "clientManifestFiles": []
+}
