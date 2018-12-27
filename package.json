@@ -1,0 +1,21 @@
+{
+  "name": "persistent-state",
+  "version": "1.0.0",
+  "description": "A native web component that holds onto the state of input elements during a session and/or between sessions.",
+  "main": "persistent-state.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "git+https://github.com/kyle-west/persistent-state.git",
+  "keywords": [
+    "web-components",
+    "storage"
+  ],
+  "author": "kyle-west",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kyle-west/persistent-state/issues"
+  },
+  "homepage": "https://github.com/kyle-west/persistent-state#readme",
+  "private": false
+}
