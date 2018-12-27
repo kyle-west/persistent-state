@@ -3,6 +3,7 @@
 A native web component that holds onto the state of input elements during a 
 session and/or between sessions.
 
+![Visual Example](./demo/example.gif)
 
 ## Usage
 
