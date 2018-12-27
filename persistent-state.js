@@ -88,6 +88,10 @@ class PersistentState extends HTMLElement {
     this.type = this.getAttribute("type") || "default";
     this._elements = [...this.children];
     this._elements.forEach(this.init.bind(this));
+    document.addEventListener("DOMContentLoaded", () => {
+      this._elements = [...this.children];
+      this._elements.forEach(this.init.bind(this));
+    });
   }
 
   init (elem, idx) {
