@@ -12,7 +12,7 @@
     </section>
     
     <section>
-      <persistent-state id="elements">
+      <persistent-state id="simple-elements">
         <h3>Default StatableElement Input/Textbox</h3>
         <input id="test" type="text">
       </persistent-state>
@@ -30,6 +30,47 @@
       <br>
       <persistent-state type="session">
         <textarea></textarea>
+      </persistent-state>
+    </section>
+    
+    <section>
+      <h3>StatableElement Complex Input Types</h3>
+      <persistent-state id="complex-states">
+        <h4>Selection Types</h4>
+        checkbox: <input type="checkbox"><br>
+        radio buttons: 
+        <input type="radio" name="this-that-or-the-other" id="o1" value="this"><label for="o1">This</label>
+        <input type="radio" name="this-that-or-the-other" id="o2" value="that"><label for="o2">That</label>
+        <input type="radio" name="this-that-or-the-other" id="o3" value="the other"><label for="o3">Or the Other</label>
+        <br>
+
+        <h4>Other Types</h4>
+        color: <input type="color"><br>
+        date: <input type="date"><br>
+        datetime-local: <input type="datetime-local"><br>
+        email: <input type="email"><br>
+        month: <input type="month"><br>
+        number: <input type="number"><br>
+        password: <input type="password"><br>
+        range: <input type="range"><br>
+        search: <input type="search"><br>
+        tel: <input type="tel"><br>
+        text: <input type="text"><br>
+        time: <input type="time"><br>
+        url: <input type="url"><br>
+        week: <input type="week">
+      </persistent-state>
+    </section
+    >
+    <section>
+      <h3>Not Supported</h3>
+      <persistent-state>
+        <h4>Selection Types</h4>
+        submit: <input type="submit"><br>
+        reset: <input type="reset"><br>
+        button: <input type="button"><br>
+        file: <input type="file"><br>
+        image: <input type="image"><br>
       </persistent-state>
     </section>
 
