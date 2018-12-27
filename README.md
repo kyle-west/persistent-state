@@ -5,6 +5,19 @@ session and/or between sessions.
 
 ![Visual Example](./demo/example.gif)
 
+## Installation 
+
+Any of the following commands will install `persistent-state`. Just pick your 
+package manager.
+
+```sh
+bower install persistent-state --save
+# OR
+yarn add kyle-west/persistent-state
+# OR
+npm install kyle-west/persistent-state --save
+```
+
 ## Usage
 
 Simply import the `persistent-state.html` file to begin using. A `persistent-state.js`
