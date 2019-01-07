@@ -95,6 +95,7 @@ class PersistentState extends HTMLElement {
   }
 
   init (elem, idx) {
+    if (elem.__persistent_state__initialized) return;
     if (!PersistentStateRegistry.supported(elem)) return;
     let id = this.id || "GLOBAL";
     
@@ -120,6 +121,8 @@ class PersistentState extends HTMLElement {
         this.storage.set(key, e.currentTarget.value, this.type, id)
       });
     }
+    
+    elem.__persistent_state__initialized = true;
   }
 }
 
