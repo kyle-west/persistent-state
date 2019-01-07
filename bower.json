@@ -1,5 +1,6 @@
 {
   "name": "persistent-state",
+  "version": "1.2.1",
   "description": "A native web component that holds onto the state of input elements during a session and/or between sessions.",
   "main": "persistent-state.js",
   "authors": [
@@ -17,6 +18,5 @@
     "bower_components",
     "test",
     "tests"
-  ],
-  "version": "1.2.0"
+  ]
 }
