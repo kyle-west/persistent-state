@@ -11,6 +11,7 @@ window.PersistentStateRegistry = (() => {
         "date",
         "datetime-local",
         "email",
+        "hidden",
         "month",
         "number",
         "password",
@@ -86,6 +87,7 @@ class PersistentState extends HTMLElement {
 
   connectedCallback () {
     this.type = this.getAttribute("type") || "default";
+    this.observers = [];
     this._elements = this.storage.supportedTags.map(e=>[...this.querySelectorAll(e)]).reduce((a,c)=>a.concat(c), []);
     this._elements.forEach(this.init.bind(this));
     document.addEventListener("DOMContentLoaded", () => {
@@ -114,6 +116,18 @@ class PersistentState extends HTMLElement {
       elem.addEventListener('change', (e) => {
         this.storage.set(key, e.currentTarget.checked, this.type, id)
       });
+    } else if ('hidden' === elem.type) {
+      let key = elem.tagName + "#" + (elem.id || idx);
+      elem.value = this.storage.get(key, this.type, id, "");
+      let observer = new MutationObserver((mutationsList, observer) => {
+        for(var mutation of mutationsList) {
+          if (mutation.attributeName == 'value') {
+            this.storage.set(key, mutation.target.value, this.type, id)
+          }
+        }
+      });
+      this.observers.push(observer);
+      observer.observe(elem, {attributes: true});
     } else {
       let key = elem.tagName + "#" + (elem.id || idx); 
       elem.value = this.storage.get(key, this.type, id, "")

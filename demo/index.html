@@ -79,8 +79,15 @@
         url: <input type="url"><br>
         week: <input type="week">
       </persistent-state>
-    </section
-    >
+    </section>
+
+    <section>
+      <h3><code>&lt;input type="hidden"&gt;</code></h3>
+      <p><em>Open the terminal and evaluate <code>hiddenInputElem</code></em> to test this feature.</p>
+      <persistent-state>
+        <input type="hidden" id="hidden-input">
+      </persistent-state>
+    </section>
     <section>
       <hr>
       <h3>Not Supported</h3>
@@ -94,5 +101,9 @@
       </persistent-state>
     </section>
 
+
+    <script>
+      window.hiddenInputElem = document.getElementById('hidden-input');
+    </script>
   </body>
 </html>
