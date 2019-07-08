@@ -53,6 +53,18 @@ you provide an `id` for each `<persistent-state>` to avoid name collisions.
 </persistent-state>
 ```
 
+## Custom Storage Keys
+
+Adding the `key` attribute will allow the input elements to have their values
+each stored under a key computed from the given `key` and `id` attributes. 
+
+```html
+<persistent-state key="customKey">
+  <input id="has-custom-key" type="text">
+</persistent-state>
+```
+
+
 ## Supported Elements
 
 Currently, the only supported elements are `<input>` and `<textarea>` tags.
@@ -65,3 +77,15 @@ new PersistentStateRegistry().supportedTags.push('my-custom-input-element');
 
 In this example, `<persistent-state>` will only work if `<my-custom-input-element>`
 has a `value` attribute and fires an `input` event when the value changes. 
+
+## Events
+
+The `PersistentState::ElementInitialized` event is fired when `PersistentState` updates 
+the value of an element.
+
+```js
+document.addEventListener('PersistentState::ElementInitialized', (e) => {
+  const { elem } = e.detail;
+  // handle updated state
+});
+```
