@@ -179,7 +179,8 @@ class PersistentState extends HTMLElement {
     } else if ('checkbox' === elem.type) {
       elem.checked = (this.storage.get(key, this.type, this._storageId, false) === 'true');
     } else {
-      elem.value = elem.value || this.storage.get(key, this.type, this._storageId, "");
+      // override text value iff there is not a value given 
+      elem.value = elem.value || this.storage.get(key, this.type, this._storageId, '') || '';
     }
   }
   
@@ -196,4 +197,9 @@ class PersistentState extends HTMLElement {
   }
 }
 
-customElements.define('persistent-state', PersistentState);
+
+if ('customElements' in window) {
+  customElements.define('persistent-state', PersistentState);
+} else {
+  document.registerElement('persistent-state', {prototype: Object.create(PersistentState.prototype)});
+}
