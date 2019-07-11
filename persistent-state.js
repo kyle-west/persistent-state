@@ -179,8 +179,7 @@ class PersistentState extends HTMLElement {
     } else if ('checkbox' === elem.type) {
       elem.checked = (this.storage.get(key, this.type, this._storageId, false) === 'true');
     } else {
-      // override text value iff there is not a value given 
-      elem.value = elem.value || this.storage.get(key, this.type, this._storageId, '') || '';
+      elem.value = this.storage.get(key, this.type, this._storageId, '') || '';
     }
   }
   
