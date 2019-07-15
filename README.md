@@ -81,7 +81,7 @@ In this example, `<persistent-state>` will only work if `<my-custom-input-elemen
 has a `value` attribute and fires an `input` event when the value changes. 
 
 <details>
-<summary><strong>Here is an exhaustive list of all the support <code>input</code> types<strong></summary>
+<summary><strong>Here is an exhaustive list of all the support <code>input</code> types</strong></summary>
 
 - `checkbox`
 - `color`
