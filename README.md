@@ -1,5 +1,7 @@
 # `<persistent-state>`
 
+[![Build Status](https://travis-ci.com/kyle-west/persistent-state.svg?branch=master)](https://travis-ci.com/kyle-west/persistent-state) [![Latest Version](https://img.shields.io/github/release/kyle-west/persistent-state.svg)](https://github.com/kyle-west/persistent-state/releases/latest) [![Licence](https://img.shields.io/github/license/kyle-west/persistent-state.svg)](https://github.com/kyle-west/persistent-state/blob/master/LICENSE) ![Size](https://img.shields.io/github/size/kyle-west/persistent-state/persistent-state.js.svg)
+
 A native web component that holds onto the state of input elements during a 
 session and/or between sessions.
 
