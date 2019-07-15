@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>persistent-state test</title>
+  <script src="../persistent-state.js"></script>
+</head>
+<body>
+  <div id="root">
+    <persistent-state id="test-1">
+      <input type="text" />
+    </persistent-state>
+
+    <persistent-state id="test-2">
+      <input type="text" />
+    </persistent-state>
+
+    <persistent-state id="test-3" type="session">
+      <input type="text" />
+    </persistent-state>
+
+    <persistent-state id="test-many" key="test-key-attribute" type="session">
+      <input type="text" id="the-input-tag-id"/>
+    </persistent-state>
+  </div>
+</body>
+</html>
