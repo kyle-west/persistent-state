@@ -81,3 +81,6 @@ typings/
 
 # for those that use MacOS
 .DS_Store
+
+# NPM
+package-lock.json

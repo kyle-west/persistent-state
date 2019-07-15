@@ -78,6 +78,40 @@ new PersistentStateRegistry().supportedTags.push('my-custom-input-element');
 In this example, `<persistent-state>` will only work if `<my-custom-input-element>`
 has a `value` attribute and fires an `input` event when the value changes. 
 
+<details>
+<summary><strong>Here is an exhaustive list of all the support <code>input</code> types<strong></summary>
+
+- `checkbox`
+- `color`
+- `date`
+- `datetime-local`
+- `email`
+- `hidden`
+- `month`
+- `number`
+- `password`
+- `radio`
+- `range`
+- `search`
+- `tel`
+- `text`
+- `time`
+- `url`
+- `week`
+
+</details>
+
+### `<input type="radio">`
+
+Note that with `radio` buttons the name has to be consistent between the elements:
+```html
+<persistent-state>
+  <input type="radio" name="some-unique-name" id="o1" value="this"><label for="o1">This</label>
+  <input type="radio" name="some-unique-name" id="o2" value="that"><label for="o2">That</label>
+  <input type="radio" name="some-unique-name" id="o3" value="the other"><label for="o3">Or the Other</label>
+</persistent-state>
+```
+
 ## Events
 
 The `PersistentState::ElementInitialized` event is fired when `PersistentState` updates 
@@ -88,4 +122,21 @@ document.addEventListener('PersistentState::ElementInitialized', (e) => {
   const { elem } = e.detail;
   // handle updated state
 });
+```
+
+## Resetting Data
+
+If you wish to remove the data stored in the browser for a specific `<persistent-state>` form,
+simply query for the web component and call the `reset()` method.
+
+```js
+let psForm = document.querySelector('persistent-state');
+psForm.reset()
+```
+
+Additionally, if you wish to remove all data stored by this package, use the `PersistentStateRegistry`.
+
+```js
+// class is a singleton
+new PersistentStateRegistry().resetAll();
 ```
