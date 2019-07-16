@@ -1,6 +1,6 @@
 {
   "name": "persistent-state",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "A native web component that holds onto the state of input elements during a session and/or between sessions.",
   "main": "persistent-state.js",
   "scripts": {
@@ -18,11 +18,10 @@
   },
   "homepage": "https://github.com/kyle-west/persistent-state#readme",
   "private": false,
-  "dependencies": {
+  "devDependencies": {
     "express": "^4.17.1",
     "http-server": "^0.11.1",
     "jest": "^24.8.0",
     "puppeteer": "^1.18.1"
-  },
-  "devDependencies": {}
+  }
 }
