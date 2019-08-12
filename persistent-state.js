@@ -119,10 +119,10 @@ class PersistentState extends HTMLElement {
     if (!PersistentStateRegistry.supported(elem)) return;
 
     let key = this.getKey(elem, idx);
-    
+
     this.initializeValue(key, elem);
     this.setupObservers(key, elem);
-    
+
     elem.__persistent_state__initialized = true;
     elem.dispatchEvent(new CustomEvent('PersistentState::ElementInitialized', {
       bubbles: true,
@@ -133,7 +133,7 @@ class PersistentState extends HTMLElement {
   }
 
   setupObservers (key, elem) {
-    if ('radio' === elem.type) {
+    if ('radio' === elem.type || 'select-one' === elem.type) {
       elem.addEventListener('change', (e) => {
         this.storage.set(key, e.currentTarget.value, this.type, this._storageId)
       });
