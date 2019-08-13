@@ -1,6 +1,7 @@
 <html>
   <head>
     <link rel="import" href="../persistent-state.html">
+    <script src="./custom-webcomponent.js"></script>
   </head>
 
   <body>
@@ -88,6 +89,16 @@
         <input type="hidden" id="hidden-input">
       </persistent-state>
     </section>
+    
+    <section>
+      <hr>
+      <h3><code>Custom WebComponents</code></h3>
+      <persistent-state id="custom-wc">
+        <this-is-a-custom-wc></this-is-a-custom-wc>
+      </persistent-state>
+    </section>
+
+
     <section>
       <hr>
       <h3>Not Supported</h3>
@@ -104,6 +115,15 @@
 
     <script>
       window.hiddenInputElem = document.getElementById('hidden-input');
+
+      new PersistentStateRegistry().registerCustomElement({
+        name: 'this-is-a-custom-wc',
+        updateProperty: 'customValue',
+        changeEvent: 'this-is-a-custom-wc::input',
+        onChange: (customEvent) => {
+          return customEvent.detail.internalInputValue
+        }
+      });
     </script>
   </body>
 </html>

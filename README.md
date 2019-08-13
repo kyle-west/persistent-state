@@ -73,11 +73,25 @@ If you have a custom element you wish to add support to, you can register it
 manually with the following:
 
 ```js
-new PersistentStateRegistry().supportedTags.push('my-custom-input-element');
+new PersistentStateRegistry().registerCustomElement({
+  // the tag name of your custom web component
+  name: 'my-custom-input-element',
+  
+  // this is the property that <persistent-state> will initialize on your component with any stored values
+  updateProperty: 'customValue',
+
+  // this is the name of the event your component fires when it's internal input value changes
+  changeEvent: 'my-custom-input-element::input-event-name',
+
+  // This is a callback for the PersistentStateRegistry to manage changes from your element.
+  // The return value from this callback will be what is stored/loaded from memory
+  onChange: (customEvent) => {
+    return customEvent.detail.customValue
+  }
+});
 ```
 
-In this example, `<persistent-state>` will only work if `<my-custom-input-element>`
-has a `value` attribute and fires an `input` event when the value changes.
+In this example, `<persistent-state>` will initialize `<my-custom-input-element>`'s `customValue` property with data from the storage when it loads, and store the value returned from the `onChange` callback when the `my-custom-input-element::input-event-name` event fires on the element. 
 
 <details>
 <summary><strong>Here is an exhaustive list of all the support <code>input</code> types</strong></summary>

@@ -1,6 +1,6 @@
 {
   "name": "persistent-state",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "A native web component that holds onto the state of input elements during a session and/or between sessions.",
   "main": "persistent-state.js",
   "scripts": {

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>persistent-state test</title>
+  <script src="../demo/custom-webcomponent.js"></script>
   <script src="../persistent-state.js"></script>
 </head>
 <body>
@@ -32,6 +33,10 @@
         <option value="Taco">Taco</option>
         <option value="Fried Rice">Fried Rice</option>
       </select>
+    </persistent-state>
+    
+    <persistent-state id="test-custom-wc">
+      <this-is-a-custom-wc></this-is-a-custom-wc>
     </persistent-state>
   </div>
 </body>
