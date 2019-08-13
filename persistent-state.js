@@ -4,7 +4,7 @@ window.PersistentStateRegistry = (() => {
   class PersistentStateRegistry {
     constructor () {
       if (instance) return instance;
-      this.supportedTags = ["input", "textarea"];
+      this.supportedTags = ["input", "select", "textarea"];
       this.supportedInputTypes = [
         "checkbox",
         "color",
@@ -133,7 +133,7 @@ class PersistentState extends HTMLElement {
   }
 
   setupObservers (key, elem) {
-    if ('radio' === elem.type || 'select-one' === elem.type) {
+    if ('radio' === elem.type || 'SELECT' === elem.tagName) {
       elem.addEventListener('change', (e) => {
         this.storage.set(key, e.currentTarget.value, this.type, this._storageId)
       });
