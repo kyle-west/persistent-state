@@ -2,14 +2,14 @@
 
 [![Build Status](https://travis-ci.com/kyle-west/persistent-state.svg?branch=master)](https://travis-ci.com/kyle-west/persistent-state) [![Latest Version](https://img.shields.io/github/release/kyle-west/persistent-state.svg)](https://github.com/kyle-west/persistent-state/releases/latest) [![Licence](https://img.shields.io/github/license/kyle-west/persistent-state.svg)](https://github.com/kyle-west/persistent-state/blob/master/LICENSE) ![Size](https://img.shields.io/github/size/kyle-west/persistent-state/persistent-state.js.svg)
 
-A native web component that holds onto the state of input elements during a 
+A native web component that holds onto the state of input elements during a
 session and/or between sessions.
 
 ![Visual Example](./demo/example.gif)
 
-# Installation 
+# Installation
 
-Any of the following commands will install `persistent-state`. Just pick your 
+Any of the following commands will install `persistent-state`. Just pick your
 package manager.
 
 ```sh
@@ -39,10 +39,10 @@ file is also available if you wish to use script:src sourcing instead of HTML im
 
 Wrap your elements in a `<persistent-state>` tag to activate. The default case
 uses `localStorage` to store state which will persist information between sessions.
-If you wish to only store information for a session, add the `type="session"` 
+If you wish to only store information for a session, add the `type="session"`
 attribute. For the best experience, please provide each element with an `id`.
 
-If you have many `<persistent-state>` elements in a DOM, it is recommended that 
+If you have many `<persistent-state>` elements in a DOM, it is recommended that
 you provide an `id` for each `<persistent-state>` to avoid name collisions.
 
 ```html
@@ -58,7 +58,7 @@ you provide an `id` for each `<persistent-state>` to avoid name collisions.
 ## Custom Storage Keys
 
 Adding the `key` attribute will allow the input elements to have their values
-each stored under a key computed from the given `key` and `id` attributes. 
+each stored under a key computed from the given `key` and `id` attributes.
 
 ```html
 <persistent-state key="customKey">
@@ -66,11 +66,10 @@ each stored under a key computed from the given `key` and `id` attributes.
 </persistent-state>
 ```
 
-
 ## Supported Elements
 
-Currently, the only supported elements are `<input>` and `<textarea>` tags.
-If you have a custom element you wish to add support to, you can register it 
+Currently, the only supported elements are `<input>`, `<select>`, and `<textarea>` tags.
+If you have a custom element you wish to add support to, you can register it
 manually with the following:
 
 ```js
@@ -78,7 +77,7 @@ new PersistentStateRegistry().supportedTags.push('my-custom-input-element');
 ```
 
 In this example, `<persistent-state>` will only work if `<my-custom-input-element>`
-has a `value` attribute and fires an `input` event when the value changes. 
+has a `value` attribute and fires an `input` event when the value changes.
 
 <details>
 <summary><strong>Here is an exhaustive list of all the support <code>input</code> types</strong></summary>
@@ -116,7 +115,7 @@ Note that with `radio` buttons the name has to be consistent between the element
 
 ## Events
 
-The `PersistentState::ElementInitialized` event is fired when `PersistentState` updates 
+The `PersistentState::ElementInitialized` event is fired when `PersistentState` updates
 the value of an element.
 
 ```js
