@@ -5,6 +5,8 @@ window.PersistentStateRegistry = (() => {
     constructor () {
       if (instance) return instance;
       this.supportedTags = ["input", "select", "textarea"];
+      this.customElementTags = [];
+      this.customElementConfigs = {};
       this.supportedInputTypes = [
         "checkbox",
         "color",
@@ -68,7 +70,7 @@ window.PersistentStateRegistry = (() => {
     static supported(elem) {
       if (!instance) new PersistentStateRegistry();
       let tagName = elem.tagName.toLowerCase();
-      let tagSupported = (instance.supportedTags.includes(tagName));
+      let tagSupported = (instance.supportedTags.includes(tagName) || instance.customElementTags.includes(tagName));
       if (tagSupported) {
         if (tagName === 'input') {
           return instance.supportedInputTypes.includes(elem.type);
@@ -76,6 +78,12 @@ window.PersistentStateRegistry = (() => {
         return true;
       }
       return false;
+    }
+
+    registerCustomElement(config) {
+      let name = config.name.toLowerCase();
+      this.customElementTags.push(name);
+      this.customElementConfigs[name] = config;
     }
   }
 
@@ -95,12 +103,17 @@ class PersistentState extends HTMLElement {
     this.type = this.getAttribute("type") || "default";
     this.observers = [];
     this._resetCallbacks = []
-    this._elements = this.storage.supportedTags.map(e=>[...this.querySelectorAll(e)]).reduce((a,c)=>a.concat(c), []);
-    this._elements.forEach(this.init.bind(this));
+    
+    this._setupElementsList()
     document.addEventListener("DOMContentLoaded", () => {
-      this._elements = this.storage.supportedTags.map(e=>[...this.querySelectorAll(e)]).reduce((a,c)=>a.concat(c), []);
-      this._elements.forEach(this.init.bind(this));
+      this._setupElementsList()
     });
+  }
+  
+  _setupElementsList () {
+    this._elements = this.storage.supportedTags.map(e=>[...this.querySelectorAll(e)]).reduce((a,c)=>a.concat(c), []);
+    this._elements = [...this._elements, ...this.storage.customElementTags.map(e=>[...this.querySelectorAll(e)]).reduce((a,c)=>a.concat(c), [])];
+    this._elements.forEach(this.init.bind(this));
   }
 
   get _storageId () {
@@ -133,7 +146,8 @@ class PersistentState extends HTMLElement {
   }
 
   setupObservers (key, elem) {
-    if ('radio' === elem.type || 'SELECT' === elem.tagName) {
+    const tagName = elem.tagName.toLowerCase()
+    if ('radio' === elem.type || 'select' === tagName) {
       elem.addEventListener('change', (e) => {
         this.storage.set(key, e.currentTarget.value, this.type, this._storageId)
       });
@@ -160,6 +174,15 @@ class PersistentState extends HTMLElement {
       this._resetCallbacks.push(() => {
         this.storage.reset(this.type, key, this._storageId)
       })
+    } else if (this.storage.customElementTags.includes(tagName)) {
+      let config = this.storage.customElementConfigs[tagName]
+      elem.addEventListener(config.changeEvent, (e) => {
+        let value = config.onChange(e);
+        this.storage.set(key, value, tagName, this._storageId)
+      });
+      this._resetCallbacks.push(() => {
+        this.storage.reset(tagName, key, this._storageId)
+      })
     } else {
       elem.addEventListener('input', (e) => {
         this.storage.set(key, e.currentTarget.value, this.type, this._storageId)
@@ -171,6 +194,7 @@ class PersistentState extends HTMLElement {
   }
 
   initializeValue (key, elem) {
+    const tagName = elem.tagName.toLowerCase();
     if ('radio' === elem.type) {
       let checkedItem = this.storage.get(key, this.type, this._storageId, null);
       if (checkedItem && checkedItem === elem.value) { 
@@ -178,6 +202,10 @@ class PersistentState extends HTMLElement {
       }
     } else if ('checkbox' === elem.type) {
       elem.checked = (this.storage.get(key, this.type, this._storageId, false) === 'true');
+    } else if (this.storage.customElementTags.includes(tagName)) {
+      let config = this.storage.customElementConfigs[tagName];
+      let value = (this.storage.get(key, tagName, this._storageId, '') || '');
+      elem[config.updateProperty] = value || elem[config.updateProperty];
     } else {
       elem.value = (this.storage.get(key, this.type, this._storageId, '') || '') || elem.value;
     }

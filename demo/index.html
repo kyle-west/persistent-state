@@ -115,6 +115,15 @@
 
     <script>
       window.hiddenInputElem = document.getElementById('hidden-input');
+
+      new PersistentStateRegistry().registerCustomElement({
+        name: 'this-is-a-custom-wc',
+        updateProperty: 'customValue',
+        changeEvent: 'this-is-a-custom-wc::input',
+        onChange: (customEvent) => {
+          return customEvent.detail.internalInputValue
+        }
+      });
     </script>
   </body>
 </html>

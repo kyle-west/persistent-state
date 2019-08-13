@@ -2,6 +2,11 @@
   const name = 'this-is-a-custom-wc'
 
   class CustomInputComponent extends HTMLElement {
+    // when this is updated by persistent-state, this web component will update it's internals 
+    set customValue (value) { 
+      this.textInput.value = value || '';
+    }
+
     connectedCallback () {
       this.attachShadow({mode: 'open'}); // this will hide the input from <persistent-state>
       this.shadowRoot.innerHTML = `
