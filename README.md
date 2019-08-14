@@ -91,7 +91,7 @@ new PersistentStateRegistry().registerCustomElement({
 });
 ```
 
-In this example, `<persistent-state>` will initialize `<my-custom-input-element>`'s `customValue` property with data from the storage when it loads, and store the value returned from the `onChange` callback when the `my-custom-input-element::input-event-name` event fires on the element. 
+In this example, `<persistent-state>` will initialize `<my-custom-input-element>`'s `customValue` property with data from the storage when it loads, and store the value returned from the `onChange` callback when the `my-custom-input-element::input-event-name` event fires on the element. _Note that this is only necessary if the custom element has a Shadow DOM._
 
 <details>
 <summary><strong>Here is an exhaustive list of all the support <code>input</code> types</strong></summary>

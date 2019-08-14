@@ -5,10 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>persistent-state test</title>
-  <script src="../demo/custom-webcomponent.js"></script>
   <script src="../persistent-state.js"></script>
+  <script src="../demo/custom-webcomponent.js"></script>
 </head>
 <body>
+  <script>
+    new PersistentStateRegistry().registerCustomElement({
+      name: 'this-is-a-custom-wc',
+      updateProperty: 'customValue',
+      changeEvent: 'this-is-a-custom-wc::input',
+      onChange: (customEvent) => {
+        return customEvent.detail.internalInputValue
+      }
+    });
+  </script>
   <div id="root">
     <persistent-state id="test-1">
       <input type="text" />
@@ -26,16 +36,45 @@
       <input type="text" id="the-input-tag-id"/>
     </persistent-state>
 
-    <persistent-state id="test-select">
-      <select id="select-foods">
+    <hr />
+
+    <persistent-state id="test-element-support">
+      <textarea></textarea>
+
+      <select>
         <option value="Banana">Banana</option>
         <option value="Bacon">Bacon</option>
         <option value="Taco">Taco</option>
         <option value="Fried Rice">Fried Rice</option>
       </select>
+
+      <input type="checkbox">
+
+      <form id="radio-btns">
+        <input type="radio" name="radio-btn-text" id="o1" value="first item"><label for="o1">first item</label>
+        <input type="radio" name="radio-btn-text" id="o2" value="middle item"><label for="o2">middle item</label>
+        <input type="radio" name="radio-btn-text" id="o3" value="last item"><label for="o3">last item</label>
+      </form>
+
+      <input type="color">
+      <input type="date">
+      <input type="datetime-local">
+      <input type="email">
+      <input type="month">
+      <input type="number">
+      <input type="password">
+      <input type="range">
+      <input type="search">
+      <input type="tel">
+      <input type="text">
+      <input type="time">
+      <input type="url">
+      <input type="week">
+
+      <input type="hidden" id="hidden-input">
     </persistent-state>
     
-    <persistent-state id="test-custom-wc">
+    <persistent-state id="test-custom-wc-support">
       <this-is-a-custom-wc></this-is-a-custom-wc>
     </persistent-state>
   </div>
