@@ -13,17 +13,18 @@ beforeAll((done) => {
   // allow specific static files to be accessed only
   testApp.use('/test', express.static('test'))
   testApp.use('/persistent-state.js', (req, res) => res.sendFile(__dirname + '/persistent-state.js'))
+  testApp.use('/demo/custom-webcomponent.js', (req, res) => res.sendFile(__dirname + '/demo/custom-webcomponent.js'))
 
   server = testApp.listen(port, done)
 });
 
 const openBrowsers = [];
 
-function getNewPage() {
+function getNewPage(config) {
   return new Promise((resolve) => {
     setTimeout(() => { // give time for the server to load up before we begin the tests
       (async () => {
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch(config);
         const page = await browser.newPage();
         await page.goto(`http://localhost:${port}/test/persistent-state_test.html`, {waitUntil : ['load', 'domcontentloaded']});
         openBrowsers.push(browser)
@@ -215,35 +216,9 @@ test(`<textarea> elements are supported`, () => {
   })
 });
 
-test(`<textarea> elements are supported`, () => {
-  return getNewPage().then(async ({ browser, page }) => {
-    const textareaElement = 'persistent-state#test-element-support textarea';
-
-    await page.waitFor(textareaElement);
-    let textareaBefore = await page.evaluate(() => {
-      return document.querySelector('persistent-state#test-element-support textarea').value
-    })
-    expect(textareaBefore).toBe('')
-
-    await page.waitFor(textareaElement);
-    await page.type(textareaElement, 'This was entered in by a test')
-    
-    // reload the page
-    const navigationPromise = page.waitForNavigation()
-    await page.evaluate(() => window.location.reload())
-    await navigationPromise
-    
-    await page.waitFor(textareaElement);
-    let textareaAfter = await page.evaluate(() => {
-      return document.querySelector('persistent-state#test-element-support textarea').value
-    })
-    expect(textareaAfter).toBe('This was entered in by a test')
-  })
-});
-
 // This also covers test for "type" in [color, date, datetime-local, email, month, number, password, range, search, tel, time, url, week]
 // because they share the same API as type="text"
-test(`<input type="text"> element is supported.`, () => {
+test(`<input type="text"> element is supported`, () => {
   return getNewPage().then(async ({ browser, page }) => {
     const inputElement = 'persistent-state#test-element-support input[type="text"]';
 
@@ -348,30 +323,30 @@ test(`<input type="hidden"> element is supported`, () => {
   })
 });
 
-// Having issues with puppeteer and shadowRoot to test this
-// test(`custom web components are supported`, () => {
-//   return getNewPage().then(async ({ browser, page }) => {
-//     const inputElement = 'persistent-state#test-custom-wc-support';
+test(`custom web components are supported`, () => {
+  return getNewPage().then(async ({ browser, page }) => {
+    const inputElement = 'persistent-state#test-custom-wc-support this-is-a-custom-wc';
 
-//     await page.waitFor(inputElement);
-//     let inputBefore = await page.evaluate(() => {
-//       return document.querySelector("#test-custom-wc-support this-is-a-custom-wc").shadowRoot
-//     })
-//     expect(inputBefore).toBe('meh')
+    await page.waitFor(inputElement);
+    let inputBefore = await page.evaluate(() => {
+      return document.querySelector("#test-custom-wc-support this-is-a-custom-wc").shadowRoot.querySelector('input').value
+    })
+    expect(inputBefore).toBe('')
 
-//     // await page.evaluate(() => {
-//     //   document.querySelector("#test-custom-wc-support this-is-a-custom-wc").shadowRoot.querySelector("input") = 'This was entered in by a test'
-//     // })
+    // get the input from the shadowRoot and type into it
+    const input = await page.evaluateHandle(`document.querySelector("#test-custom-wc-support this-is-a-custom-wc").shadowRoot.querySelector('input')`);
+    await input.focus();
+    await input.type('This was entered in by a test');
     
-//     // reload the page
-//     // const navigationPromise = page.waitForNavigation()
-//     // await page.evaluate(() => window.location.reload())
-//     // await navigationPromise
+    // reload the page
+    const navigationPromise = page.waitForNavigation()
+    await page.evaluate(() => window.location.reload())
+    await navigationPromise
     
-//     // await page.waitFor(inputElement);
-//     // let inputAfter = await page.evaluate(() => {
-//     //   return document.querySelector("#test-custom-wc-support this-is-a-custom-wc").shadowRoot.querySelector("input").value
-//     // })
-//     // expect(inputAfter).toBe('This was entered in by a test')
-//   })
-// });
+    await page.waitFor(inputElement);
+    let inputAfter = await page.evaluate(() => {
+      return document.querySelector("#test-custom-wc-support this-is-a-custom-wc").shadowRoot.querySelector('input').value
+    })
+    expect(inputAfter).toBe('This was entered in by a test')
+  })
+});
