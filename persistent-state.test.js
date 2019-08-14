@@ -14,6 +14,7 @@ beforeAll((done) => {
   testApp.use('/test', express.static('test'))
   testApp.use('/persistent-state.js', (req, res) => res.sendFile(__dirname + '/persistent-state.js'))
   testApp.use('/demo/custom-webcomponent.js', (req, res) => res.sendFile(__dirname + '/demo/custom-webcomponent.js'))
+  testApp.use('/demo/json-wc.js', (req, res) => res.sendFile(__dirname + '/demo/json-wc.js'))
 
   server = testApp.listen(port, done)
 });
@@ -325,9 +326,9 @@ test(`<input type="hidden"> element is supported`, () => {
 
 test(`custom web components are supported`, () => {
   return getNewPage().then(async ({ browser, page }) => {
-    const inputElement = 'persistent-state#test-custom-wc-support this-is-a-custom-wc';
+    const webComponent = 'persistent-state#test-custom-wc-support this-is-a-custom-wc';
 
-    await page.waitFor(inputElement);
+    await page.waitFor(webComponent);
     let inputBefore = await page.evaluate(() => {
       return document.querySelector("#test-custom-wc-support this-is-a-custom-wc").shadowRoot.querySelector('input').value
     })
@@ -343,10 +344,40 @@ test(`custom web components are supported`, () => {
     await page.evaluate(() => window.location.reload())
     await navigationPromise
     
-    await page.waitFor(inputElement);
+    await page.waitFor(webComponent);
     let inputAfter = await page.evaluate(() => {
       return document.querySelector("#test-custom-wc-support this-is-a-custom-wc").shadowRoot.querySelector('input').value
     })
     expect(inputAfter).toBe('This was entered in by a test')
+  })
+});
+
+test(`custom web components API: isJSON`, () => {
+  return getNewPage().then(async ({ browser, page }) => {
+    const webComponent = 'persistent-state#test-wc-json-support json-wc';
+
+    await page.waitFor(webComponent);
+    let jsonBefore = await page.evaluate(() => {
+      return document.querySelector("#test-wc-json-support json-wc")._state;
+    })
+    expect(jsonBefore).toEqual({ loadedFromMemory: false, clickCount: 0 })
+
+    // get the input from the shadowRoot and type into it
+    const input = await page.evaluateHandle(`document.querySelector("#test-wc-json-support json-wc").shadowRoot.querySelector('button')`);
+    await input.focus();
+    await input.click();
+    await input.click();
+    await input.click();
+    
+    // reload the page
+    const navigationPromise = page.waitForNavigation()
+    await page.evaluate(() => window.location.reload())
+    await navigationPromise
+    
+    await page.waitFor(webComponent);
+    let jsonAfter = await page.evaluate(() => {
+      return document.querySelector("#test-wc-json-support json-wc")._state
+    })
+    expect(jsonAfter).toEqual({ loadedFromMemory: true, clickCount: 3 })
   })
 });
