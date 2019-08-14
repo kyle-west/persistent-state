@@ -40,13 +40,29 @@ window.PersistentStateRegistry = (() => {
       }
     }
 
-    get (key, type="default", id="GLOBAL", defaultValue) {
+    get (key, type="default", id="GLOBAL", defaultValue, treatAsJSON = false) {
       let value = this.getStorage(type).getItem(this.generateStorageKey(key, id));
       if (value === undefined) value = defaultValue;
+
+      if (treatAsJSON) {
+        try {
+          value = JSON.parse(value);
+        } catch(err) {
+          console.warn('PersistentStateRegistry::get : Could not parse value as JSON', value, err)
+        }
+      }
+
       return value;
     }
 
-    set (key, value, type="default", id="GLOBAL") {
+    set (key, value, type="default", id="GLOBAL", treatAsJSON = false) {
+      if (treatAsJSON) {
+        try {
+          value = JSON.stringify(value);
+        } catch(err) {
+          console.warn('PersistentStateRegistry::set : Could not stringify. Expected JSON object. Recieved:', value, err)
+        }
+      }
       this.getStorage(type).setItem(this.generateStorageKey(key, id), value);
     }
 
@@ -82,6 +98,7 @@ window.PersistentStateRegistry = (() => {
 
     registerCustomElement(config) {
       let name = config.name.toLowerCase();
+      config.isJSON = !!config.isJSON;
       this.customElementTags.push(name);
       this.customElementConfigs[name] = config;
     }
@@ -178,10 +195,10 @@ class PersistentState extends HTMLElement {
       let config = this.storage.customElementConfigs[tagName]
       elem.addEventListener(config.changeEvent, (e) => {
         let value = config.onChange(e);
-        this.storage.set(key, value, tagName, this._storageId)
+        this.storage.set(key, value, this.type, this._storageId, config.isJSON)
       });
       this._resetCallbacks.push(() => {
-        this.storage.reset(tagName, key, this._storageId)
+        this.storage.reset(this.type, key, this._storageId)
       })
     } else {
       elem.addEventListener('input', (e) => {
@@ -204,13 +221,13 @@ class PersistentState extends HTMLElement {
       elem.checked = (this.storage.get(key, this.type, this._storageId, false) === 'true');
     } else if (this.storage.customElementTags.includes(tagName)) {
       let config = this.storage.customElementConfigs[tagName];
-      let value = (this.storage.get(key, tagName, this._storageId, '') || '');
+      let value = (this.storage.get(key, this.type, this._storageId, '', config.isJSON) || '');
       elem[config.updateProperty] = value || elem[config.updateProperty];
     } else {
       elem.value = (this.storage.get(key, this.type, this._storageId, '') || '') || elem.value;
     }
   }
-  
+
   getKey (elem, idx) {
     if ('radio' === elem.type) {
       return elem.tagName + "[name=" + elem.name + "]"; 

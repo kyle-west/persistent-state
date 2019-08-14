@@ -83,6 +83,9 @@ new PersistentStateRegistry().registerCustomElement({
   // this is the name of the event your component fires when it's internal input value changes
   changeEvent: 'my-custom-input-element::input-event-name',
 
+  // [OPTIONAL] specify if the stored data should be handled as JSON (default: false)
+  isJSON: true,
+
   // This is a callback for the PersistentStateRegistry to manage changes from your element.
   // The return value from this callback will be what is stored/loaded from memory
   onChange: (customEvent) => {
