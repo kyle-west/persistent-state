@@ -7,6 +7,7 @@
   <title>persistent-state test</title>
   <script src="../persistent-state.js"></script>
   <script src="../demo/custom-webcomponent.js"></script>
+  <script src="../demo/json-wc.js"></script>
 </head>
 <body>
   <script>
@@ -16,6 +17,17 @@
       changeEvent: 'this-is-a-custom-wc::input',
       onChange: (customEvent) => {
         return customEvent.detail.internalInputValue
+      }
+    });
+
+    new PersistentStateRegistry().registerCustomElement({
+      name: 'json-wc',
+      updateProperty: 'state',
+      isJSON: true,
+      changeEvent: 'json-wc::click',
+      onChange: (customEvent) => {
+        let { state } = customEvent.detail
+        return Object.assign({}, state, {loadedFromMemory: true})
       }
     });
   </script>
@@ -76,6 +88,9 @@
     
     <persistent-state id="test-custom-wc-support">
       <this-is-a-custom-wc></this-is-a-custom-wc>
+    </persistent-state>
+    <persistent-state id="test-wc-json-support">
+      <json-wc></json-wc>
     </persistent-state>
   </div>
 </body>

@@ -80,6 +80,9 @@ new PersistentStateRegistry().registerCustomElement({
   // this is the property that <persistent-state> will initialize on your component with any stored values
   updateProperty: 'customValue',
 
+  // [OPTIONAL] specify if the stored data should be handled as JSON (default: false)
+  isJSON: true,
+
   // this is the name of the event your component fires when it's internal input value changes
   changeEvent: 'my-custom-input-element::input-event-name',
 
